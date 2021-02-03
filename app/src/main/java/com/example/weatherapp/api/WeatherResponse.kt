@@ -10,33 +10,7 @@ class WeatherResponse {
     var main = Main()
 }
 
-class Weather {
-    @SerializedName("id")
-    var id: Int = 0
+data class Weather(var id: Int = 0, var main: String? = null, var description: String? = null, var icon: String? = null)
 
-    @SerializedName("main")
-    var main: String? = null
+data class Main(var temp: Float = 0f, var humidity: Float = 0f, var pressure: Float = 0f, var temp_min: Float = 0f, var temp_max: Float = 0f)
 
-    @SerializedName("description")
-    var description: String? = null
-
-    @SerializedName("icon")
-    var icon: String? = null
-}
-
-class Main {
-    @SerializedName("temp")
-    var temp = 0f
-
-    @SerializedName("humidity")
-    var humidity = 0f
-
-    @SerializedName("pressure")
-    var pressure = 0f
-
-    @SerializedName("temp_min")
-    var temp_min = 0f
-
-    @SerializedName("temp_max")
-    var temp_max = 0f
-}

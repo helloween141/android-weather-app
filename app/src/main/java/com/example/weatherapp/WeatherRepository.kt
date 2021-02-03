@@ -8,6 +8,7 @@ import com.example.weatherapp.constants.Constants
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.math.roundToInt
 
 class WeatherRepository {
     private var weatherLiveData: MutableLiveData<String> = MutableLiveData()
@@ -20,7 +21,9 @@ class WeatherRepository {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
                 if (response.code() == 200) {
                     val weatherResponse = response.body()!!
-                    weatherLiveData.value = weatherResponse.main.temp.toString();
+                    val temperature = (weatherResponse.main.temp - 273.15).roundToInt()
+
+                    weatherLiveData.value = temperature.toString()
                 }
             }
 
