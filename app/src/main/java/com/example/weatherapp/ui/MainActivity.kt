@@ -1,9 +1,10 @@
-package com.example.weatherapp
+package com.example.weatherapp.ui
 
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import com.example.weatherapp.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getCity().observe(this, {
             tv_city.text = it
+            viewModel.fetchWeatherData(it)
         })
 
         viewModel.getWeatherData().observe(this, {
