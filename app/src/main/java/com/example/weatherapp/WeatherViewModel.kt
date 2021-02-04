@@ -3,14 +3,23 @@ package com.example.weatherapp
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
-class WeatherViewModel(application: Application) : AndroidViewModel(application) {
+class WeatherViewModel : ViewModel() {
     var cityLiveData: MutableLiveData<String> = MutableLiveData()
     var weatherLiveData: MutableLiveData<String> = MutableLiveData()
     val weatherRepository: WeatherRepository = WeatherRepository()
 
+    fun fetchWeatherData() {
+        viewModelScope.launch {
+            val data = weatherRepository.getWeatherDataFromAPI()
+            //weatherLiveData.postValue(weatherRepository.getWeatherDataFromAPI().toString())
+        }
+    }
+
     fun getWeatherData(): MutableLiveData<String> {
-        weatherLiveData = weatherRepository.getWeatherDataFromAPI()
         return weatherLiveData
     }
 

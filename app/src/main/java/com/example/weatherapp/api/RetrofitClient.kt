@@ -9,4 +9,6 @@ object RetrofitClient {
         .baseUrl(Constants.baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
+
+    val weatherService = client.create(iWeatherService::class.java)
 }

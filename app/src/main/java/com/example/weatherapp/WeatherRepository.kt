@@ -10,28 +10,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.math.roundToInt
 
-class WeatherRepository {
-    private var weatherLiveData: MutableLiveData<String> = MutableLiveData()
-    private val service = RetrofitClient.client.create(iWeatherService::class.java)
-    private val call = service.getCurrentWeatherData(Constants.appid, "Moscow")
-
-    fun getWeatherDataFromAPI(): MutableLiveData<String> {
-
-        call.enqueue(object : Callback<WeatherResponse> {
-            override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
-                if (response.code() == 200) {
-                    val weatherResponse = response.body()!!
-                    val temperature = (weatherResponse.main.temp - 273.15).roundToInt()
-
-                    weatherLiveData.value = temperature.toString()
-                }
-            }
-
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                weatherLiveData.value = "Can't get data from API"
-            }
-        })
-        return  weatherLiveData
+class WeatherRepository : iWeatherRepository {
+    override suspend fun getWeatherDataFromAPI(): MutableLiveData<String> {
+        return RetrofitClient.weatherService.getWeatherData(Constants.appid, "Moscow")
     }
-
 }
