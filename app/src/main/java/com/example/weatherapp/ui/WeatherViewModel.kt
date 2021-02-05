@@ -14,19 +14,32 @@ import retrofit2.Response
 class WeatherViewModel : ViewModel() {
     var cityLiveData: MutableLiveData<String> = MutableLiveData()
     var weatherLiveData: MutableLiveData<String> = MutableLiveData()
+    var loaderLiveData: MutableLiveData<Boolean> = MutableLiveData()
+
     private val weatherRepository: WeatherRepository = WeatherRepository()
 
     fun fetchWeatherData(cityName: String) {
         viewModelScope.launch {
             val data = weatherRepository.getWeatherDataFromAPI(cityName)
-
+            loaderLiveData.value = true
             data.enqueue(object : Callback<WeatherRemote> {
                 override fun onResponse(call: Call<WeatherRemote>?, response: Response<WeatherRemote>?) {
+                    var result = ""
                     if (response != null) {
-                        val body = response.body()
-                        val result = "Weather: ${body.weather[0].main}, Temperature: ${body.main.temp}"
-                        weatherLiveData.postValue(result)
+                        if (response.body() != null) {
+                            val body = response.body()
+                            val temperature = Math.round(body.main.temp - 273.15)
+                            val weather = body.weather[0].description
+                            result = "$temperature ℃, $weather"
+                        } else {
+                            result = "Нет данных по городу"
+                        }
+                    } else {
+                        result = "Нет данных по городу"
                     }
+
+                    loaderLiveData.value = false
+                    weatherLiveData.postValue(result)
                 }
 
                 override fun onFailure(call: Call<WeatherRemote>?, t: Throwable?) {
@@ -48,5 +61,9 @@ class WeatherViewModel : ViewModel() {
 
     fun setCity(cityName: String) {
         cityLiveData.value = cityName
+    }
+
+    fun getLoaderStatus(): MutableLiveData<Boolean> {
+        return loaderLiveData
     }
 }

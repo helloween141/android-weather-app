@@ -3,6 +3,7 @@ package com.example.weatherapp.ui
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.R
 import kotlinx.android.synthetic.main.activity_main.*
@@ -19,6 +20,8 @@ class MainActivity : AppCompatActivity() {
 
         button.setOnClickListener{
             viewModel.setCity(et_cityName.text.toString())
+            et_cityName.setText("")
+            tv_temp.setText("")
         }
 
         viewModel.getCity().observe(this, {
@@ -27,7 +30,15 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewModel.getWeatherData().observe(this, {
-            tv_degreeValue.setText("$it \u2103")
+            tv_temp.text = it
+        })
+
+        viewModel.getLoaderStatus().observe(this, {
+            if (it) {
+                loader.visibility = View.VISIBLE
+            } else {
+                loader.visibility = View.GONE
+            }
         })
     }
 }

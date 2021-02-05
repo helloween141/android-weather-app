@@ -9,6 +9,7 @@ interface WeatherService {
     @GET("data/2.5/weather?")
     fun getWeatherData(
         @Query("APPID") app_id: String,
-        @Query("q") city: String
+        @Query("q") city: String,
+        @Query("lang") lang: String
     ): Call<WeatherRemote>
 }
